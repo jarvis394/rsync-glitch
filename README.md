@@ -1,27 +1,12 @@
-Welcome to Glitch
-=================
+# rsync-node
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+Have an external server but do not have an access to a professional code editor?
+Try using free [Glitch.com](https://glitch.com) platform as not hosting but a code editor in your browser!
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+### Usage
 
-Find out more [about Glitch](https://glitch.com/about).
+It is good to use `rsync-node` when:
+- you don't have an access to an editor but still want to program your app which runs on an external server
+- the Glitch does not provide you enough of RAM memory and you want to use your own server
+- you are just curious what does this package!
 
-
-Your Project
-------------
-
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
-
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
-
-
-Made by [Glitch](https://glitch.com/)
--------------------
-
-\ ゜o゜)ノ
