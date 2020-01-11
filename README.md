@@ -40,7 +40,7 @@ Command above will add the development dependency to your `package.json` file.
 Don't panic, every Glitch's project container has `node` preinstalled, so simply skip this step and 
 go to the next one!
 
-**Step Two: Run**
+**Step Two: Set up the script**
 
 Change the `"start"` script in your `package.json` file:
 
@@ -48,10 +48,19 @@ Change the `"start"` script in your `package.json` file:
 {
   "scripts": {
 -   "start": "node ."
-+   "start": "rsync-glitch --port 3000"
++   "start": "rsync-glitch -d user@server:22 --password \"($SSH_USER_PASS)\""
   }
 }
 ```
 
-<p style="color: red;">hxhhd</p>
-<span>yxyd</span>
+What are we doing here: 
+1. Executing the package `rsync-glitch`
+2. `-d` flag means the dest
+
+**Step Three (optional): Update .env**
+
+If you have a password for the *user* rsync would connect to by SSH, update your `.env` file with the following:
+
+```bash
+SSH_USER_PASS=secret_password
+```
