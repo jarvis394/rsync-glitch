@@ -19,6 +19,10 @@ It is good to use `rsync-glitch` when:
 
 `code-server` could be the thing you've been searching for, but it takes up to **500mb of RAM**, when you can do all the same in the Glitch's editor with `rsync-glitch` package.
 
+-------
+
+**Step One: Install**
+
 To install this package you have to run 
 
 ```bash
@@ -26,5 +30,28 @@ npm install -D rsync-glitch
 
 # or
 
-yarn install -D rsync-glitch
+yarn install -dev rsync-glitch
 ```
+
+Command above will add the development dependency to your `package.json` file.
+
+> **Wait, package.json? I'm not using Node.JS at all! What should I do?**
+
+Don't panic, every Glitch's project container has `node` preinstalled, so simply skip this step and 
+go to the next one!
+
+**Step Two: Run**
+
+Change the `"start"` script in your `package.json` file:
+
+```json
+{
+  "scripts": {
+-   "start": "node ."
++   "start": "rsync-glitch --port 3000"
+  }
+}
+```
+
+<p style="color: red;">hxhhd</p>
+<span>yxyd</span>
