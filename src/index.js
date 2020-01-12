@@ -2,6 +2,7 @@ const cli = require('commander')
 const chalk = require('chalk')
 const ssh = require('ssh2')
 const http = require('http')
+const fs = require('fs')
 const chokidar = require('chokidar')
 const throttleWrapper = require('lodash.throttle')
 const options = require('./options')
@@ -46,6 +47,8 @@ if (cli.listen) {
 }
 
 const throttle = parseInt(cli.throttle) || 0
+const host = cli.dest.split(':')[0].split('@')[1]
+const user = cli.dest.split(':')[0].split('@')[0]
 
 /** Create rsync wrapper instance */
 const rsync = rsyncCreator(cli.source, cli.dest)
@@ -76,28 +79,42 @@ const execute = () => {
 }
 
 const unlinkFile = path => {
+  const command = 'rm ' + cli.dest.split(':')[1] + '/' + path
+  
   sshConnection.on('ready', () => {
-    const command = 'rm ' + cli.destination.split(':')[1] + path
     sshConnection.exec(command, (error, stream) => {
       if (error) console.error(
         chalk.white('On trying to delete the file "' + path + '":'),
         '\n' + error
       )
+
+      console.log('OK:  Deleted the directory', path)
     })
+  }).connect({
+    host,
+    port: 22,
+    username: user,
+    password: 'vladikus123'
   })
 }
 
 const unlinkDir = path => {
+  const command = 'rm -rf' + cli.dest.split(':')[1] + '/' + path
+  
   sshConnection.on('ready', () => {
-    const command = 'rm -rf' + cli.destination.split(':')[1] + path
     sshConnection.exec(command, (error, stream) => {
       if (error) console.error(
         chalk.white('On trying to delete the directory "' + path + '":'),
         '\n' + error
       )
-      
-      console.log(se)
+
+      console.log('OK:  Deleted the directory', path)
     })
+  }).connect({
+    host,
+    port: 22,
+    username: user,
+    privateKey: require('fs').readFileSync('/here/is/my/key')
   })
 }
 
