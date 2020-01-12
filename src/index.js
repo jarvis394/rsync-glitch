@@ -76,7 +76,8 @@ const execute = () => {
  * @param {string} path - File path
  */
 const onChange = (event, path) => {
-  throttleWrapper(execute, throttle)
+  // throttleWrapper(execute, throttle)
+  execute()
 }
 
 // Watch all changes
