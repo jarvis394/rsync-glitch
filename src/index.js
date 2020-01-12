@@ -10,12 +10,13 @@ const rsyncCreator = require('./rsync')
 const ignoredList = require('./ignoredList')
 const packageJson = require('../package.json')
 
-let privateKey
+let privateKey, delayedTask
 try {
   privateKey = fs.readFileSync('./.ssh/id_rsa')
 } catch(e) {
   console.error('There is some error on trying to read the RSA key:\n', e, '\n\nThe expected path was: ./.ssh/id_rsa')
 }
+
 /**
  * HTTP server for simply listen on some port in order to
  * stop Glitch app showing 'loading' icon
@@ -56,87 +57,96 @@ const throttle = parseInt(cli.throttle) || 0
 const host = cli.dest.split(':')[0].split('@')[1]
 const user = cli.dest.split(':')[0].split('@')[0]
 
-sshConnection.on('ready', () => console.log('INFO:  Estabilished SSH connection to ' + cli.dest.split(':')[0])).connect({
+// Connect to the server
+sshConnection.on('ready', () => {
+  console.log('INFO:  Estabilished SSH connection to ', cli.dest.split(':')[0])
+
+  // Create rsync wrapper instance 
+  const rsync = rsyncCreator(cli.source, cli.dest)
+
+  // Create watcher 
+  const watcher = chokidar.watch(cli.source, { 
+    ignoreInitial: true,
+    ignored: ignoredList
+  })
+
+  const execute = path => {
+    console.log(chalk.gray('INFO:  Saving changes for "' + path + '"...'))
+
+    rsync.execute((error, code, cmd) => {
+      // If error happened then notify user
+      if (code === 0) {
+        console.log(chalk.green('OK:  '), ' Saved changes!')
+      } else {
+        console.error(
+          chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
+          chalk.white(error),
+          '\nExecuted command:', chalk.yellow(cmd)
+        )
+      }
+    }, 
+    (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')), 
+    (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')))
+  }
+
+  const unlinkFile = path => {
+    const command = 'rm ' + cli.dest.split(':')[1] + '/' + path
+
+    console.log('INFO:  Deleting the file "' + path + '"...')
+
+    sshConnection.exec(command, (error, stream) => {
+      if (error) console.error(
+        chalk.white('On trying to delete the file "' + path + '":'),
+        '\n' + error
+      )
+
+      console.log('OK:    Deleted the file', path)
+    })
+  }
+
+  const unlinkDir = path => {
+    path = path.split('/')[path.split('/').length - 1]
+    const command = 'rm -rf ' + cli.dest.split(':')[1] + '/' + path
+
+    console.log('INFO:  Deleting the directory "' + path + '"...')
+
+    sshConnection.exec(command, (error, stream) => {
+      if (error) console.error(
+        chalk.white('On trying to delete the directory "' + path + '":'),
+        '\n' + error
+      )
+
+      console.log('OK:    Deleted the directory', path)
+    })
+  }
+
+  /**
+   * Executes on every file change, whether it is 'add', 
+   * 'remove' or any other event
+   * @param {string} event - Event name
+   * @param {string} path - File path
+   */
+  const onChange = (event, path) => {
+    clearTimeout(delayedTask)
+
+    cli.verbose && console.log('VRBS:  Got event "' + event + '"')
+
+    delayedTask = setTimeout(() => {
+      if (event === 'unlink') {
+        return unlinkFile(path)
+      } else if (event === 'unlinkDir') {
+        return unlinkDir(path)
+      }
+
+      execute(path)
+    }, throttle)
+  }
+
+  // Watch for all changes
+  watcher.on('all', (...args) => onChange(...args))
+}).connect({
   host,
   port: 22,
   username: user,
   privateKey
 })
-
-/** Create rsync wrapper instance */
-const rsync = rsyncCreator(cli.source, cli.dest)
-
-/** Create watcher */
-const watcher = chokidar.watch(cli.source, { 
-  ignoreInitial: true,
-  ignored: ignoredList
-})
-
-const execute = path => {
-  console.log(chalk.gray('INFO:  Saving changes for "' + path + '"...'))
-  
-  rsync.execute((error, code, cmd) => {
-    // If error happened then notify user
-    if (code === 0) {
-      console.log(chalk.green('OK:  '), ' Saved changes!')
-    } else {
-      console.error(
-        chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
-        chalk.white(error),
-        '\nExecuted command:', chalk.yellow(cmd)
-      )
-    }
-  }, 
-  (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')), 
-  (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')))
-}
-
-const unlinkFile = path => {
-  const command = 'rm ' + cli.dest.split(':')[1] + '/' + path
-  
-  console.log('INFO:  Deleting the file "' + path + '"...')
-  
-  sshConnection.exec(command, (error, stream) => {
-    if (error) console.error(
-      chalk.white('On trying to delete the file "' + path + '":'),
-      '\n' + error
-    )
-
-    console.log('OK:    Deleted the file', path)
-  })
-}
-
-const unlinkDir = path => {
-  path = path.split('/')[path.split('/').length - 1]
-  const command = 'rm -rf' + cli.dest.split(':')[1] + '/' + path
-  
-  console.log('INFO:  Deleting the directory "' + path + '"...')
-  
-  sshConnection.exec(command, (error, stream) => {
-    if (error) console.error(
-      chalk.white('On trying to delete the directory "' + path + '":'),
-      '\n' + error
-    )
-
-    console.log('OK:    Deleted the directory', path)
-  })
-}
-
-/**
- * Executes on every file change, whether it is 'add', 
- * 'remove' or any other event
- * @param {string} event - Event name
- * @param {string} path - File path
- */
-const onChange = (event, path) => {
-  if (event === 'unlink') {
-    return unlinkFile(path)
-  } else if (event === 'unlinkDir') {
-    return unlinkDir(path)
-  }
-  
-  execute(path)
-}
-
-// Watch all changes
-watcher.on('all', (...args) => onChange(...args))
