@@ -29,18 +29,13 @@ To install this package you have to run
 
 ```bash
 npm install -D rsync-glitch
-
-# or
-
-yarn install -dev rsync-glitch
 ```
 
 Command above will add the development dependency to your `package.json` file.
 
 > **Wait, package.json? I'm not using Node.JS at all! What should I do?**
 
-Don't panic, every Glitch's project container has `node` preinstalled, so simply skip this step and
-go to the next one!
+Don't panic, just add `package.json` by executing `npm imit -y` in command line
 
 **Step Two: Set up the script**
 

@@ -4,7 +4,7 @@
   "description": "Copies contents of your project to the external server 🚀",
   "main": "src/index.js",
   "scripts": {
-    "start": "./run.sh"
+    "start": "markserv README.md"
   },
   "files": [
     "./src"
@@ -15,6 +15,9 @@
     "chalk": "^3.0.0",
     "chokidar": "^3.3.0",
     "ssh2": "^0.8.7"
+  },
+  "devDependencies": {
+    "markserv": "^1.17.3"
   },
   "engines": {
     "node": "8.x"

@@ -1,1 +1,0 @@
-node . -l 3000 -s ./src -d jarvis394@45.84.1.17:/home/jarvis394/apps/rsync-glitch -t 100

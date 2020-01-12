@@ -108,7 +108,7 @@ sshConnection.on('ready', () => {
 
   const unlinkDir = path => {
     path = path.split('/')[path.split('/').length - 1]
-    const command = 'rm -rf ' + cli.dest.split(':')[1] + '/' + path
+    const command = 'rm -rf ' + cli.dest.split(':')[1] + '/' + cli.source + '/' + path
 
     console.log('INFO:  Deleting the directory "' + path + '"...')
 
@@ -129,6 +129,8 @@ sshConnection.on('ready', () => {
    * @param {string} path - File path
    */
   const onChange = (event, path) => {
+    if (event === 'addDir') return
+    
     clearTimeout(delayedTask)
 
     cli.verbose && console.log('INFO:  Got event "' + event + '"')

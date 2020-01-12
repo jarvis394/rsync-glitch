@@ -1,9 +1,0 @@
-{ 
-  "restart": {
-    "include": [
-      "run.sh",
-      "\\.js"
-    ]
-  },
-  "throttle": 1000000000
-}
