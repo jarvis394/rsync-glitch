@@ -6,7 +6,6 @@ const fs = require('fs')
 const chokidar = require('chokidar')
 const options = require('./options')
 const rsyncCreator = require('./rsync')
-const ignoredList = require('./ignoredList')
 const packageJson = require('../package.json')
 
 let privateKey, delayedTask
@@ -69,7 +68,8 @@ sshConnection.on('ready', () => {
   // Create watcher 
   const watcher = chokidar.watch(cli.source, { 
     ignoreInitial: true,
-    ignored: ignoredList
+    ignored: /\.save\./g,
+    awaitWriteFinish: true
   })
 
   const execute = path => {

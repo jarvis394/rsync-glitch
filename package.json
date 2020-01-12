@@ -1,11 +1,14 @@
 {
   "name": "rsync-glitch",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Copies contents of your project to the external server 🚀",
   "main": "src/index.js",
   "scripts": {
     "start": "./run.sh"
   },
+  "files": [
+    "./src"
+  ],
   "dependencies": {
     "rsync": "^0.6.1",
     "commander": "^4.1.0",
@@ -16,13 +19,14 @@
   "engines": {
     "node": "8.x"
   },
+  "homepage": "https://github.com/jarvis394/rsync-glitch",
   "repository": {
-    "url": "https://glitch.com/edit/#!/hello-express"
+    "url": "https://github.com/jarvis394/rsync-glitch"
   },
   "license": "MIT",
   "keywords": [
     "node",
     "glitch",
-    "express"
+    "rsync"
   ]
 }

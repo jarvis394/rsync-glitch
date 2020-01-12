@@ -91,3 +91,5 @@ Now you can code freely and the changes you make would reflect on the server's c
 |   -l, --listen [port]   | Listen on port to make Glitch project stop showing \'loading\' icon |  3000   |          |
 | -t, --throttle <number> | Adds a delay before sending your changes to rsync                   |  1000   |          |
 |      -v, --verbose      | Everything being verbosed                                           |         |          |
+|   -p, --port [number]   | Custom SSH server port to connect                                   |   22    |          |
+|  -f, --flags <string>   | Custom flags for rsync command                                      |         |          |
