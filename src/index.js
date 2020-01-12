@@ -16,6 +16,8 @@ const server = http.createServer()
 /** Describes an application. Short and simple. */
 const appDescription = chalk.bold('Copies contents of your project to the external server 🚀')
 
+let lastTime = Date.now()
+
 /** Set up cli application parameters */
 cli
   .name(packageJson.name)
@@ -37,6 +39,8 @@ if (cli.listen) {
   console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
 }
 
+const throttle = cli.throttle || 0
+
 /** Create rsync wrapper instance */
 const rsync = rsyncCreator(cli.source, cli.dest)
 
@@ -49,10 +53,15 @@ const watcher = chokidar.watch('./src', {
 /**
  * Executes on every file change, whether it is 'add', 
  * 'remove' or any other event
- * @param {pa
+ * @param {string} event - Event name
+ * @param {string} path - File path
  */
-const onChange = (path, stats) => {
-  console.log(path)
+const onChange = (event, path) => {
+  const now = Date.now()
+  
+  if (now > lastTime + throttle) {
+    rsync.execute()
+  }
 }
 
-watcher.on('change', (...args) => onChange(...args))
+watcher.on('all', (...args) => onChange(...args))
