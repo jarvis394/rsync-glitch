@@ -66,7 +66,9 @@ const execute = () => {
         '\nExecuted command:', chalk.yellow(cmd)
       )
     }
-  }, (data) => console.log(data), (data) => console.log(data))
+  }, 
+  (data) => data.toString('utf8') && console.log(data.toString('utf8')), 
+  (data) => data.toString('utf8') && console.log(data.toString('utf8')))
 }
 
 /**
