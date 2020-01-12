@@ -35,7 +35,7 @@ Command above will add the development dependency to your `package.json` file.
 
 > **Wait, package.json? I'm not using Node.JS at all! What should I do?**
 
-Don't panic, just add `package.json` by executing `npm imit -y` in command line
+Don't panic, just add `package.json` by executing `npm imit -y` in command line!
 
 **Step Two: Set up the script**
 

@@ -4,7 +4,7 @@
   "description": "Copies contents of your project to the external server 🚀",
   "main": "src/index.js",
   "scripts": {
-    "start": "markserv README.md"
+    "start": "markserv ./README.md -p 3000"
   },
   "files": [
     "./src"
