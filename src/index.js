@@ -21,10 +21,10 @@ try {
  */
 const server = http.createServer()
 
-/** Describes an application. Short and simple. */
+// Describes an application. Short and simple. */
 const appDescription = chalk.bold('Copies contents of your project to the external server 🚀')
 
-/** SSH connection to execute remove commands */
+// SSH connection to execute remove commands */
 const sshConnection = new ssh.Client()
 
 let wasFiletreeChanged = false
@@ -48,7 +48,7 @@ cli.parse(process.argv)
 /** Listen on given port */
 if (cli.listen) {
   server.listen(3000)
-  console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
+  console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen), '\n')
 }
 
 const flags = cli.flags || 'avr'
@@ -131,7 +131,7 @@ sshConnection.on('ready', () => {
   const onChange = (event, path) => {
     clearTimeout(delayedTask)
 
-    cli.verbose && console.log('VRBS:  Got event "' + event + '"')
+    cli.verbose && console.log('INFO:  Got event "' + event + '"')
     
     if (event === 'unlink') {
       return unlinkFile(path)

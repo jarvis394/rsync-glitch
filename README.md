@@ -83,6 +83,12 @@ For more detailed explanation, see
 
 You have to start `nodemon .` on the server in the newly appeared directory.
 
+> `nodemon` package watches for the directory changes and restarts Node application automatically
+
+Do not forget to install `nodemon` as a dev dependency in order to not get furious for repeatedly doing `CTRL+C` and `node .`:
+```bash
+npm i -D nodemon
+```
 
 **Step Five: Code!**
 
@@ -126,7 +132,9 @@ rsync-glitch
   
 **...are welcome!** Feel free to open an issue or a Pull request
 
+*License: MIT*
+
 ## Credits
 
-Author: jarvis394 ([git](https://github.com/jarvis394))
+Author: jarvis394 ([github](https://github.com/jarvis394), [vk](https://vk.com/tarnatovski))
 
