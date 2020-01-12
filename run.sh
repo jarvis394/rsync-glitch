@@ -1,1 +1,1 @@
-node . -l 3000 -s ./src -d ./dest -t 1000
+node . -l 3000 -s ./src/ -d ./dest

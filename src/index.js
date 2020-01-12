@@ -50,8 +50,6 @@ const watcher = chokidar.watch(cli.source, {
   ignored: ignoredList
 })
 
-/** some */
-
 /**
  * Executes on every file change, whether it is 'add', 
  * 'remove' or any other event
@@ -75,3 +73,4 @@ const onChange = (event, path) => {
 }
 
 watcher.on('all', (...args) => onChange(...args))
+
