@@ -6,7 +6,7 @@ module.exports = (source, destination) => {
   rsync.source(source)
   rsync.destination(destination)
   rsync.flags('avzr')
-  rsync.exclude(ignoredList)
+  rsync.exclude([ '*.save.*', ...ignoredList ])
   
   return rsync
 }

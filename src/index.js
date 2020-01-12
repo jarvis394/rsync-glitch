@@ -56,7 +56,7 @@ const throttle = parseInt(cli.throttle) || 0
 const host = cli.dest.split(':')[0].split('@')[1]
 const user = cli.dest.split(':')[0].split('@')[0]
 
-sshConnection.connect({
+sshConnection.on('ready', () => console.log('INFO:  Estabilished SSH connection to ' + cli.dest.split(':')[0])).connect({
   host,
   port: 22,
   username: user,
@@ -72,8 +72,8 @@ const watcher = chokidar.watch(cli.source, {
   ignored: ignoredList
 })
 
-const execute = () => {
-  console.log(chalk.gray('INFO:  Saving changes...'))
+const execute = path => {
+  console.log(chalk.gray('INFO:  Saving changes for "' + path + '"...'))
   
   rsync.execute((error, code, cmd) => {
     // If error happened then notify user
@@ -118,12 +118,6 @@ const unlinkDir = path => {
       '\n' + error
     )
 
-    stream.on('close', function() {
-      console.log('Stream :: close');
-    }).on('data', function(data) {
-      console.log('OUTPUT: ' + data);
-    })
-
     console.log('OK:    Deleted the directory', path)
   })
 }
@@ -141,7 +135,7 @@ const onChange = (event, path) => {
     return unlinkDir(path)
   }
   
-  execute()
+  execute(path)
 }
 
 // Watch all changes
