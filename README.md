@@ -44,8 +44,7 @@ Change the `"start"` script in your `package.json` file:
 ```json
 {
   "scripts": {
--   "start": "node ."
-+   "start": "rsync-glitch -s ./ -d user@server:/home/user/app"
+    "start": "rsync-glitch -s ./ -d user@server:/home/user/app"
   }
 }
 ```
