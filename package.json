@@ -9,7 +9,8 @@
   "dependencies": {
     "rsync": "^0.6.1",
     "commander": "^4.1.0",
-    "chalk": "^3.0.0"
+    "chalk": "^3.0.0",
+    "chokidar": "^3.3.0"
   },
   "engines": {
     "node": "8.x"

@@ -1,1 +1,1 @@
-node . -l 4000 -d djduud
+node . -l 4000 -d djduu

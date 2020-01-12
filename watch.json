@@ -1,0 +1,9 @@
+{ 
+  "restart": {
+    "include": [
+      "run.sh",
+      "**/*.js"
+    ]
+  },
+  "delay": 1000
+}
