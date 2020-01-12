@@ -69,13 +69,13 @@ and automated connection.
 
 ```bash
 # Create key
-ssh-keygen -t rsa 
+ssh-keygen -t rsa
 
 # Send it to the server
 ssh-copy-id user@address
 ```
 
-For more detailed explanation, see 
+For more detailed explanation, see
 [this site](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2#step-one%E2%80%94create-the-rsa-key-pair)
 
 **Step Four: Code!**
@@ -89,4 +89,5 @@ Now you can code freely and the changes you make would reflect on the server's c
 |   -s, --source [path]   | Source folder rsync would copy from                                 |  "./"   |          |
 |    -d, --dest <path>    | Destination address rsync would copy to                             |         |    ✔     |
 |   -l, --listen [port]   | Listen on port to make Glitch project stop showing \'loading\' icon |  3000   |          |
-| -t, --throttle <number> | Adds a delay before sending your changes to rsync                   |         |          |
+| -t, --throttle <number> | Adds a delay before sending your changes to rsync                   |  1000   |          |
+|      -v, --verbose      | Everything being verbosed                                           |         |          |

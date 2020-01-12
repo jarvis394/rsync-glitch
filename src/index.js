@@ -65,7 +65,7 @@ const execute = () => {
   rsync.execute((error, code, cmd) => {
     // If error happened then notify user
     if (code === 0) {
-      console.log(chalk.green('OK:'), ' Saved changes!')
+      console.log(chalk.green('OK:  '), ' Saved changes!')
     } else {
       console.error(
         chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
@@ -74,8 +74,8 @@ const execute = () => {
       )
     }
   }, 
-  (data) => data.toString('utf8') && console.log(data.toString('utf8')), 
-  (data) => data.toString('utf8') && console.log(data.toString('utf8')))
+  (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')), 
+  (data) => cli.verbose && data.toString('utf8') && console.log(data.toString('utf8')))
 }
 
 const unlinkFile = path => {
@@ -88,17 +88,18 @@ const unlinkFile = path => {
         '\n' + error
       )
 
-      console.log('OK:  Deleted the directory', path)
+      console.log('OK:    Deleted the file', path)
     })
   }).connect({
     host,
     port: 22,
     username: user,
-    password: 'vladikus123'
+    privateKey: fs.readFileSync('./.ssh/id_rsa')
   })
 }
 
 const unlinkDir = path => {
+  path = path.split('/')[path.split('/').length - 1]
   const command = 'rm -rf' + cli.dest.split(':')[1] + '/' + path
   
   sshConnection.on('ready', () => {
@@ -108,13 +109,13 @@ const unlinkDir = path => {
         '\n' + error
       )
 
-      console.log('OK:  Deleted the directory', path)
+      console.log('OK:    Deleted the directory', path)
     })
   }).connect({
     host,
     port: 22,
     username: user,
-    privateKey: require('fs').readFileSync('/here/is/my/key')
+    privateKey: fs.readFileSync('./.ssh/id_rsa')
   })
 }
 
@@ -130,8 +131,6 @@ const onChange = (event, path) => {
   } else if (event === 'unlinkDir') {
     return unlinkDir(path)
   }
-  
-  console.log(event)
   
   execute()
 }

@@ -15,7 +15,12 @@ module.exports = [
     defaultValue: 3000,
   },
   {
-    option: '-t, --throttle <number>',
-    description: 'Adds a delay before sending your changes to rsync'
+    option: '-t, --throttle [number]',
+    description: 'Adds a delay before sending your changes to rsync',
+    defaultValue: 1000,
+  },
+  {
+    option: '-v, --verbose',
+    description: 'Everything being verbosed',
   }
 ]
