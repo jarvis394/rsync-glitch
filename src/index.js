@@ -10,6 +10,12 @@ const rsyncCreator = require('./rsync')
 const ignoredList = require('./ignoredList')
 const packageJson = require('../package.json')
 
+let privateKey
+try {
+  privateKey = fs.readFileSync('./.ssh/id_rsa')
+} catch(e) {
+  console.error('There is some error on trying to read the RSA key:\n', e, '\n\nThe expected path was: ./.ssh/id_rsa')
+}
 /**
  * HTTP server for simply listen on some port in order to
  * stop Glitch app showing 'loading' icon
@@ -50,6 +56,13 @@ const throttle = parseInt(cli.throttle) || 0
 const host = cli.dest.split(':')[0].split('@')[1]
 const user = cli.dest.split(':')[0].split('@')[0]
 
+sshConnection.connect({
+  host,
+  port: 22,
+  username: user,
+  privateKey
+})
+
 /** Create rsync wrapper instance */
 const rsync = rsyncCreator(cli.source, cli.dest)
 
@@ -81,20 +94,15 @@ const execute = () => {
 const unlinkFile = path => {
   const command = 'rm ' + cli.dest.split(':')[1] + '/' + path
   
-  sshConnection.on('ready', () => {
-    sshConnection.exec(command, (error, stream) => {
-      if (error) console.error(
-        chalk.white('On trying to delete the file "' + path + '":'),
-        '\n' + error
-      )
+  console.log('INFO:  Deleting the file "' + path + '"...')
+  
+  sshConnection.exec(command, (error, stream) => {
+    if (error) console.error(
+      chalk.white('On trying to delete the file "' + path + '":'),
+      '\n' + error
+    )
 
-      console.log('OK:    Deleted the file', path)
-    })
-  }).connect({
-    host,
-    port: 22,
-    username: user,
-    privateKey: fs.readFileSync('./.ssh/id_rsa')
+    console.log('OK:    Deleted the file', path)
   })
 }
 
@@ -102,20 +110,21 @@ const unlinkDir = path => {
   path = path.split('/')[path.split('/').length - 1]
   const command = 'rm -rf' + cli.dest.split(':')[1] + '/' + path
   
-  sshConnection.on('ready', () => {
-    sshConnection.exec(command, (error, stream) => {
-      if (error) console.error(
-        chalk.white('On trying to delete the directory "' + path + '":'),
-        '\n' + error
-      )
+  console.log('INFO:  Deleting the directory "' + path + '"...')
+  
+  sshConnection.exec(command, (error, stream) => {
+    if (error) console.error(
+      chalk.white('On trying to delete the directory "' + path + '":'),
+      '\n' + error
+    )
 
-      console.log('OK:    Deleted the directory', path)
+    stream.on('close', function() {
+      console.log('Stream :: close');
+    }).on('data', function(data) {
+      console.log('OUTPUT: ' + data);
     })
-  }).connect({
-    host,
-    port: 22,
-    username: user,
-    privateKey: fs.readFileSync('./.ssh/id_rsa')
+
+    console.log('OK:    Deleted the directory', path)
   })
 }
 
