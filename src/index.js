@@ -1,9 +1,9 @@
 const cli = require('commander')
 const chalk = require('chalk')
-const rsync = require('rsync')
 const http = require('http')
 const chokidar = require('chokidar')
 const options = require('./options')
+const rsyncCreator = require('./rsync')
 const ignoredList = require('./ignoredList')
 const packageJson = require('../package.json')
 
@@ -37,9 +37,22 @@ if (cli.listen) {
   console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
 }
 
+/** Create rsync wrapper instance */
+const rsync = rsyncCreator(cli.source, cli.dest)
+
+/** Create watcher */
 const watcher = chokidar.watch('./src', { 
   ignoreInitial: true,
   ignored: ignoredList
 })
-  
+
+/**
+ * Executes on every file change, whether it is 'add', 
+ * 'remove' or any other event
+ * @param {pa
+ */
+const onChange = (path, stats) => {
+  console.log(path)
+}
+
 watcher.on('change', (...args) => onChange(...args))
