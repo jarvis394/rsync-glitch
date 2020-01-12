@@ -1,8 +1,9 @@
 module.exports = [
   {
-    option: '',
-    description: '',
+    option: '-s, --source <path>',
+    description: 'Source folder rsync would copy from',
     defaultValue: null,
+    required: true
   },
   {
     option: '',
