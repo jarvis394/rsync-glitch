@@ -1,5 +1,6 @@
 const cli = require('commander')
 const chalk = require('chalk')
+const ssh = require('ssh2')
 const http = require('http')
 const chokidar = require('chokidar')
 const throttleWrapper = require('lodash.throttle')
@@ -16,6 +17,9 @@ const server = http.createServer()
 
 /** Describes an application. Short and simple. */
 const appDescription = chalk.bold('Copies contents of your project to the external server 🚀')
+
+/** SSH connection to execute remove commands */
+const sshConnection = new ssh.Client()
 
 let wasFiletreeChanged = false
 let lastTime = Date.now()
@@ -71,6 +75,30 @@ const execute = () => {
   (data) => data.toString('utf8') && console.log(data.toString('utf8')))
 }
 
+const unlinkFile = path => {
+  sshConnection.on('ready', () => {
+    const command = 'rm ' + cli.destination.split(':')[1] + path
+    sshConnection.exec(command, (error, stream) => {
+      if (error) console.error(
+        chalk.white('On trying to delete the file "' + path + '":'),
+        '\n' + error
+      )
+    })
+  })
+}
+
+const unlinkDir = path => {
+  sshConnection.on('ready', () => {
+    const command = 'rm -rf' + cli.destination.split(':')[1] + path
+    sshConnection.exec(command, (error, stream) => {
+      if (error) console.error(
+        chalk.white('On trying to delete the directory "' + path + '":'),
+        '\n' + error
+      )
+    })
+  })
+}
+
 /**
  * Executes on every file change, whether it is 'add', 
  * 'remove' or any other event
@@ -78,8 +106,13 @@ const execute = () => {
  * @param {string} path - File path
  */
 const onChange = (event, path) => {
-  // throttleWrapper(execute, throttle)
-  execute()
+  if (event === 'unlink') {
+    unlinkFile(path)
+  } else if (event === 'unlinkDir') {
+    unlinkDir(path)
+  }
+  
+  throttleWrapper(execute, throttle)
 }
 
 // Watch all changes
