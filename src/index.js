@@ -54,7 +54,7 @@ const watcher = chokidar.watch(cli.source, {
 
 const execute = () => {
   console.log(chalk.gray('INFO:  Saving changes...'))
-
+  
   rsync.execute((error, code, cmd) => {
     // If error happened then notify user
     if (code === 0) {
