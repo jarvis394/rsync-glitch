@@ -15,10 +15,6 @@ module.exports = [
     defaultValue: 3000,
   },
   {
-    option: '-p, --pass <password>',
-    description: 'Password to connect to your external server by SSH',
-  },
-  {
     option: '-t, --throttle <number>',
     description: 'Adds a delay before sending your changes to rsync'
   }

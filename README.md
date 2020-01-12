@@ -18,7 +18,8 @@ It is good to use `rsync-glitch` when:
 
 > I can run my own VSCode in the web! Why should I use this? 🤷‍♂️
 
-`code-server` could be the thing you've been searching for, but it takes up to **500mb of RAM**, when you can do all the same in the Glitch's editor with `rsync-glitch` package.
+`code-server` could be the thing you've been searching for, but it takes up to **500mb of RAM**,
+when you can do all the same in the Glitch's editor with `rsync-glitch` package.
 
 ---
 
@@ -49,7 +50,7 @@ Change the `"start"` script in your `package.json` file:
 {
   "scripts": {
 -   "start": "node ."
-+   "start": "rsync-glitch -s ./ -d user@server:22/app --password \"($SSH_USER_PASS)\""
++   "start": "rsync-glitch -s ./ -d user@server:22/app"
   }
 }
 ```
@@ -59,15 +60,11 @@ What we are doing here:
 1. Executing the package `rsync-glitch`
 2. `-s` flag means the source folder where `rsync` would search for files to copy
 3. `-d` flag means the destination place where `rsync` would copy the files
-4. `--password` sets up the password for the SSH user _(optional)_
 
 **Step Three (optional): Update .env**
 
-If you have a password for the _user_ rsync would connect to by SSH, update your `.env` file with the following:
-
-```bash
-SSH_USER_PASS=secret_password
-```
+If you have a password for the _user_ rsync would connect to by SSH, you have to create RSA keys to have secured
+and automated connection
 
 **Step Four: Code!**
 
@@ -75,7 +72,9 @@ Now you can code freely and the changes you make would reflect on the server's c
 
 ## Arguments
 
-
-|Name|Description|
-|:--:|--|
-|-s|Source folder|
+|          Name           | Description                                                         | Default | Required |
+| :---------------------: | ------------------------------------------------------------------- | :-----: | :------: |
+|   -s, --source [path]   | Source folder rsync would copy from                                 |  "./"   |          |
+|    -d, --dest <path>    | Destination address rsync would copy to                             |         |    ✔     |
+|   -l, --listen [port]   | Listen on port to make Glitch project stop showing \'loading\' icon |  3000   |          |
+| -t, --throttle <number> | Adds a delay before sending your changes to rsync                   |         |          |
