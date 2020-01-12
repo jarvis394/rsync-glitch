@@ -64,7 +64,9 @@ What we are doing here:
 **Step Three (optional): Update .env**
 
 If you have a password for the _user_ rsync would connect to by SSH, you have to create RSA keys to have secured
-and automated connection
+and automated connection.
+
+
 
 **Step Four: Code!**
 
