@@ -1,10 +1,10 @@
 {
-  "name": "raync-glitch",
+  "name": "rsync-glitch",
   "version": "0.0.1",
   "description": "Copies contents of your project to the external server 🚀",
   "main": "src/index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node . -h"
   },
   "dependencies": {
     "rsync": "^0.6.1",
