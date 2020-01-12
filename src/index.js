@@ -51,9 +51,9 @@ if (cli.listen) {
   console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
 }
 
-const flags = cli.flags || 'r'
+const flags = cli.flags || 'avr'
 const port = parseInt(cli.port) || 22
-const throttle = parseInt(cli.throttle) || 0
+const throttle = parseInt(cli.throttle) || 1000
 const host = cli.dest.split(':')[0].split('@')[1]
 const username = cli.dest.split(':')[0].split('@')[0]
 

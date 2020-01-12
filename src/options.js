@@ -16,7 +16,7 @@ module.exports = [
   },
   {
     option: '-t, --throttle [number]',
-    description: 'Adds a delay before sending your changes to rsync',
+    description: 'Adds a delay (in ms) before sending your changes to rsync',
     defaultValue: 1000,
   },
   {
@@ -26,7 +26,7 @@ module.exports = [
   {
     option: '-f, --flags <string>',
     description: 'Custom flags for rsync command',
-    defaultValue: 'r'
+    defaultValue: 'avr'
   },
   {
     option: '-p, --port',

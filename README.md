@@ -50,7 +50,7 @@ Change the `"start"` script in your `package.json` file:
 {
   "scripts": {
 -   "start": "node ."
-+   "start": "rsync-glitch -s ./ -d user@server:22/app -t 10000"
++   "start": "rsync-glitch -s ./ -d user@server:/home/user/app"
   }
 }
 ```
@@ -60,7 +60,8 @@ What we are doing here:
 1. Executing the package `rsync-glitch`
 2. `-s` flag means the source folder where `rsync` would search for files to copy
 3. `-d` flag means the destination place where `rsync` would copy the files
-4. `-t` flag means the delay between updating the contents on the server
+
+**Don't forget to change the `user` and `server` values to the actual username and IP!**
 
 **Step Three (optional): Update .env**
 
@@ -78,7 +79,12 @@ ssh-copy-id user@address
 For more detailed explanation, see
 [this site](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2#step-one%E2%80%94create-the-rsa-key-pair)
 
-**Step Four: Code!**
+**Step Four: Server part**
+
+You have to start `nodemon .` on the server in the newly appeared directory.
+
+
+**Step Five: Code!**
 
 Now you can code freely and the changes you make would reflect on the server's contents!
 
@@ -89,18 +95,38 @@ Now you can code freely and the changes you make would reflect on the server's c
 |   -s, --source [path]   | Source folder rsync would copy from                                 |  "./"   |          |
 |    -d, --dest <path>    | Destination address rsync would copy to                             |         |    ✔     |
 |   -l, --listen [port]   | Listen on port to make Glitch project stop showing \'loading\' icon |  3000   |          |
-| -t, --throttle <number> | Adds a delay before sending your changes to rsync                   |  1000   |          |
+| -t, --throttle <number> | Adds a delay (in ms) before sending your changes to rsync           |  1000   |          |
 |      -v, --verbose      | Everything being verbosed                                           |         |          |
 |   -p, --port [number]   | Custom SSH server port to connect                                   |   22    |          |
-|  -f, --flags <string>   | Custom flags for rsync command                                      |         |          |
+|  -f, --flags <string>   | Custom flags for rsync command                                      |  "avr"  |          |
 
 ## Examples
 
 1. Simple
-  ```bash
-  rsync-glitch 
-    --source ./src 
-    --dest user@1.1.1.1:/home/user/apps
-  ```
-  
+
+```bash
+rsync-glitch
+  --source ./src
+  --dest user@1.1.1.1:/home/user/app
+```
+
 2. Advanced
+
+```bash
+rsync-glitch
+  --source ./src
+  --dest user@1.1.1.1:/home/user/app
+  --throttle 10000
+  --flags "avzr"
+  --port 8000
+  --listen 3000
+```
+  
+## Contributions
+  
+**...are welcome!** Feel free to open an issue or a Pull request
+
+## Credits
+
+Author: jarvis394 ([git](https://github.com/jarvis394))
+
