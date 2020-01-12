@@ -16,6 +16,7 @@ const server = http.createServer()
 /** Describes an application. Short and simple. */
 const appDescription = chalk.bold('Copies contents of your project to the external server 🚀')
 
+let wasFiletreeChanged = false
 let lastTime = Date.now()
 
 /** Set up cli application parameters */
@@ -61,13 +62,21 @@ const onChange = (event, path) => {
   console.log(event, path, now, lastTime)
   
   if (now > lastTime + throttle) {
-    console.log('Trying rsync...')
-    rsync.execute((error, stdout, stderr) => {
-      stdout && console.log('stdout:', stdout)
-      error && console.log('error:', error)
-      stderr && console.log('stderr:', stderr)
-      
+    console.log(chalk.gray('INFO:  Saving changes...'))
+    
+    rsync.execute((error, code, cmd) => {
       lastTime = now
+      
+      // If error happened then notify user
+      if (code === 0) {
+        console.log(chalk.green('OK:'), ' Saved changes!')
+      } else {
+        console.error(
+          chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
+          chalk.white(error),
+          '\nExecuted command:', chalk.yellow(cmd)
+        )
+      }
     })
   }
 }
