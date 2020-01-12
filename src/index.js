@@ -95,6 +95,8 @@ const unlinkDir = path => {
         chalk.white('On trying to delete the directory "' + path + '":'),
         '\n' + error
       )
+      
+      console.log(se)
     })
   })
 }
@@ -107,12 +109,14 @@ const unlinkDir = path => {
  */
 const onChange = (event, path) => {
   if (event === 'unlink') {
-    unlinkFile(path)
+    return unlinkFile(path)
   } else if (event === 'unlinkDir') {
-    unlinkDir(path)
+    return unlinkDir(path)
   }
   
-  throttleWrapper(execute, throttle)
+  console.log(event)
+  
+  execute()
 }
 
 // Watch all changes
