@@ -2,6 +2,7 @@ dependencies:
   chalk: 3.0.0
   chokidar: 3.3.1
   commander: 4.1.0
+  lodash.throttle: 4.1.1
   rsync: 0.6.1
 packages:
   /@types/color-name/1.1.1:
@@ -140,6 +141,10 @@ packages:
       node: '>=0.12.0'
     resolution:
       integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
+  /lodash.throttle/4.1.1:
+    dev: false
+    resolution:
+      integrity: sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
   /normalize-path/3.0.0:
     dev: false
     engines:
@@ -187,4 +192,5 @@ specifiers:
   chalk: ^3.0.0
   chokidar: ^3.3.0
   commander: ^4.1.0
+  lodash.throttle: ^4.1.1
   rsync: ^0.6.1

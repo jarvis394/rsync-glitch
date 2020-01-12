@@ -2,6 +2,7 @@ const cli = require('commander')
 const chalk = require('chalk')
 const http = require('http')
 const chokidar = require('chokidar')
+const throttleWrapper = require('lodash.throttle')
 const options = require('./options')
 const rsyncCreator = require('./rsync')
 const ignoredList = require('./ignoredList')
@@ -51,6 +52,23 @@ const watcher = chokidar.watch(cli.source, {
   ignored: ignoredList
 })
 
+const execute = () => {
+  console.log(chalk.gray('INFO:  Saving changes...'))
+
+  rsync.execute((error, code, cmd) => {
+    // If error happened then notify user
+    if (code === 0) {
+      console.log(chalk.green('OK:'), ' Saved changes!')
+    } else {
+      console.error(
+        chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
+        chalk.white(error),
+        '\nExecuted command:', chalk.yellow(cmd)
+      )
+    }
+  })
+}
+
 /**
  * Executes on every file change, whether it is 'add', 
  * 'remove' or any other event
@@ -58,28 +76,8 @@ const watcher = chokidar.watch(cli.source, {
  * @param {string} path - File path
  */
 const onChange = (event, path) => {
-  const now = Date.now()
-  console.log(event, path, now, lastTime)
-  
-  if (now > lastTime + throttle) {
-    console.log(chalk.gray('INFO:  Saving changes...'))
-    
-    rsync.execute((error, code, cmd) => {
-      lastTime = now
-      
-      // If error happened then notify user
-      if (code === 0) {
-        console.log(chalk.green('OK:'), ' Saved changes!')
-      } else {
-        console.error(
-          chalk.white('[' + code + ']') + '  On trying to execute rsync: \n', 
-          chalk.white(error),
-          '\nExecuted command:', chalk.yellow(cmd)
-        )
-      }
-    })
-  }
+  throttleWrapper(execute, throttle)
 }
 
+// Watch all changes
 watcher.on('all', (...args) => onChange(...args))
-
