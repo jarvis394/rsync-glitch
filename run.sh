@@ -1,1 +1,1 @@
-node . -l 4000 -d djduu
+node . -l 3000 -s ./src -d ./dest -t 1000
