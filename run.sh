@@ -1,1 +1,1 @@
-node . -l 3000 -s ./src -d jarvis394@45.84.1.17:/apps
+node . -l 3000 -s ./src -d jarvis394@45.84.1.17

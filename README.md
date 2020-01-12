@@ -50,7 +50,7 @@ Change the `"start"` script in your `package.json` file:
 {
   "scripts": {
 -   "start": "node ."
-+   "start": "rsync-glitch -s ./ -d user@server:22/app -t "
++   "start": "rsync-glitch -s ./ -d user@server:22/app -t 10000"
   }
 }
 ```
@@ -60,19 +60,29 @@ What we are doing here:
 1. Executing the package `rsync-glitch`
 2. `-s` flag means the source folder where `rsync` would search for files to copy
 3. `-d` flag means the destination place where `rsync` would copy the files
+4. `-t` flag means the delay between updating the contents on the server
 
 **Step Three (optional): Update .env**
 
 If you have a password for the _user_ rsync would connect to by SSH, you have to create RSA keys to have secured
 and automated connection.
 
+```bash
+# Create key
+ssh-keygen -t rsa 
 
+# Send it to the server
+ssh-copy-id user@address
+```
+
+For more detailed explanation, see 
+[this site](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2#step-one%E2%80%94create-the-rsa-key-pair)
 
 **Step Four: Code!**
 
 Now you can code freely and the changes you make would reflect on the server's contents!
 
-## Arguments
+## Options
 
 |          Name           | Description                                                         | Default | Required |
 | :---------------------: | ------------------------------------------------------------------- | :-----: | :------: |
