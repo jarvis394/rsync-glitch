@@ -22,5 +22,14 @@ module.exports = [
   {
     option: '-v, --verbose',
     description: 'Everything being verbosed',
+  },
+  {
+    option: '-f, --flags <string>',
+    description: 'Custom flags for rsync command',
+    defaultValue: 'r'
+  },
+  {
+    option: '-p, --port',
+    description: 'Custom SSH server port to connect',
   }
 ]

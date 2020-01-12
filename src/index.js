@@ -4,7 +4,6 @@ const ssh = require('ssh2')
 const http = require('http')
 const fs = require('fs')
 const chokidar = require('chokidar')
-const throttleWrapper = require('lodash.throttle')
 const options = require('./options')
 const rsyncCreator = require('./rsync')
 const ignoredList = require('./ignoredList')
@@ -53,16 +52,19 @@ if (cli.listen) {
   console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
 }
 
+const flags = cli.flags || 'r'
+const port = parseInt(cli.port) || 22
 const throttle = parseInt(cli.throttle) || 0
 const host = cli.dest.split(':')[0].split('@')[1]
-const user = cli.dest.split(':')[0].split('@')[0]
+const username = cli.dest.split(':')[0].split('@')[0]
 
 // Connect to the server
 sshConnection.on('ready', () => {
-  console.log('INFO:  Estabilished SSH connection to ', cli.dest.split(':')[0])
+  console.log('INFO:  Estabilished SSH connection to', cli.dest.split(':')[0])
+  console.log('INFO:  Started watching for the file changes...')
 
   // Create rsync wrapper instance 
-  const rsync = rsyncCreator(cli.source, cli.dest)
+  const rsync = rsyncCreator(cli.source, cli.dest, flags)
 
   // Create watcher 
   const watcher = chokidar.watch(cli.source, { 
@@ -100,7 +102,7 @@ sshConnection.on('ready', () => {
         '\n' + error
       )
 
-      console.log('OK:    Deleted the file', path)
+      console.log('OK:    File was deleted (' + path + ')')
     })
   }
 
@@ -116,7 +118,7 @@ sshConnection.on('ready', () => {
         '\n' + error
       )
 
-      console.log('OK:    Deleted the directory', path)
+      console.log('OK:    Directory was deleted (' + path + ')')
     })
   }
 
@@ -130,23 +132,21 @@ sshConnection.on('ready', () => {
     clearTimeout(delayedTask)
 
     cli.verbose && console.log('VRBS:  Got event "' + event + '"')
-
-    delayedTask = setTimeout(() => {
-      if (event === 'unlink') {
-        return unlinkFile(path)
-      } else if (event === 'unlinkDir') {
-        return unlinkDir(path)
-      }
-
-      execute(path)
-    }, throttle)
+    
+    if (event === 'unlink') {
+      return unlinkFile(path)
+    } else if (event === 'unlinkDir') {
+      return unlinkDir(path)
+    }
+    
+    delayedTask = setTimeout(() => execute(path), throttle)
   }
 
   // Watch for all changes
   watcher.on('all', (...args) => onChange(...args))
 }).connect({
   host,
-  port: 22,
-  username: user,
+  port,
+  username,
   privateKey
 })

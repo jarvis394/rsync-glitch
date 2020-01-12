@@ -4,7 +4,7 @@
   "description": "Copies contents of your project to the external server 🚀",
   "main": "src/index.js",
   "scripts": {
-    "start": "node -e \"require('http').createServer().listen(3000)\""
+    "start": "./run.sh"
   },
   "dependencies": {
     "rsync": "^0.6.1",
