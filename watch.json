@@ -2,8 +2,8 @@
   "restart": {
     "include": [
       "run.sh",
-      "**/*.js"
+      "\\.js"
     ]
   },
-  "delay": 1000
+  "throttle": 1000000000
 }

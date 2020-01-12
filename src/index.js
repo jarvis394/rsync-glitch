@@ -36,3 +36,6 @@ if (cli.listen) {
   console.log(chalk.green('Your app is listening on port'), chalk.yellow(cli.listen))
 }
 
+chokidar.watch('./src', { ignoreInitial: true }).on('all', (event, path) => {
+  console.log(event, path);
+});
