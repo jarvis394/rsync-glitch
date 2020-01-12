@@ -50,7 +50,7 @@ Change the `"start"` script in your `package.json` file:
 {
   "scripts": {
 -   "start": "node ."
-+   "start": "rsync-glitch -s ./ -d user@server:22/app"
++   "start": "rsync-glitch -s ./ -d user@server:22/app -t "
   }
 }
 ```
