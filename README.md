@@ -93,3 +93,14 @@ Now you can code freely and the changes you make would reflect on the server's c
 |      -v, --verbose      | Everything being verbosed                                           |         |          |
 |   -p, --port [number]   | Custom SSH server port to connect                                   |   22    |          |
 |  -f, --flags <string>   | Custom flags for rsync command                                      |         |          |
+
+## Examples
+
+1. Simple
+  ```bash
+  rsync-glitch 
+    --source ./src 
+    --dest user@1.1.1.1:/home/user/apps
+  ```
+  
+2. Advanced

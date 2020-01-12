@@ -19,6 +19,7 @@
   "engines": {
     "node": "8.x"
   },
+  "author": "jarvis394",
   "homepage": "https://github.com/jarvis394/rsync-glitch",
   "repository": {
     "url": "https://github.com/jarvis394/rsync-glitch"
