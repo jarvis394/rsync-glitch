@@ -39,13 +39,7 @@ if (cli.listen) {
 
 const watcher = chokidar.watch('./src', { 
   ignoreInitial: true,
-  ignore: ignoredList
+  ignored: ignoredList
 })
   
-watcher
-  .on('change', (path, stats) => {
-    console.log(path, stats)
-  })
-  .on('raw', (event, path, details) => { // internal
-    console.log('Raw event info:', event, path, details);
-  })
+watcher.on('change', (...args) => onChange(...args))
